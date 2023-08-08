@@ -31,7 +31,7 @@ module.exports.getUserId = (req, res) => {
       })
       .catch(() => res.status(404).send({ message: 'Пользователь не найден' }));
   } else {
-    res.status(500).send({ message: 'Внутренняя ошибка сервера' });
+    res.status(400).send({ message: 'Неправильно введен id' });
   }
 };
 

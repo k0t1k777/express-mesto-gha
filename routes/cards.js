@@ -21,6 +21,6 @@ router.delete('/:cardId', deleteCard);
 router.put('/:cardId/likes', makeLike);
 
 // убрать лайк с карточки
-router.delete('/me/:cardId/likes', removeLike);
+router.delete('/:cardId/likes', removeLike);
 
 module.exports = router;
