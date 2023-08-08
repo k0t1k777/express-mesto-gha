@@ -3,9 +3,9 @@ const User = require('../models/user');
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then((user) => res.status(200).send(user))
+    .then((user) => res.status(200).send({ data: user }))
     .catch((error) => {
-      if (error.name === 'validationError') {
+      if (error.name === 'ValidationError') {
         res.status(400).send({ message: error.message });
       } else {
         res.status(500).send({ message: 'Внутренняя ошибка сервера' });
@@ -40,7 +40,7 @@ module.exports.updateAvatar = (req, res) => {
     User.findByIdAndUpdate(req.user._id, { avatar: req.body.avatar }, { new: 'true', runValidators: true })
       .then((user) => res.send(user))
       .catch((error) => {
-        if (error.name === 'validationError') {
+        if (error.name === 'ValidationError') {
           res.status(400).send({ message: error.message });
         } else {
           res.status(404).send({ message: error.message });
@@ -57,7 +57,7 @@ module.exports.updateProfile = (req, res) => {
     User.findByIdAndUpdate(req.user._id, { name, about }, { new: 'true', runValidators: true })
       .then((user) => res.send(user))
       .catch((error) => {
-        if (error.name === 'validationError') {
+        if (error.name === 'ValidationError') {
           res.status(400).send({ message: error.message });
         } else {
           res.status(404).send({ message: error.message });

@@ -7,7 +7,7 @@ module.exports.createCard = (req, res) => {
       res.send(card);
     })
     .catch((error) => {
-      if (error.name === 'validationError') {
+      if (error.name === 'ValidationError') {
         res.status(400).send({ message: error.message });
       } else {
         res.status(500).send({ message: 'Внутренняя ошибка сервера' });
