@@ -44,7 +44,7 @@ module.exports.updateAvatar = (req, res) => {
         if (error.name === 'ValidationError') {
           res.status(400).send({ message: error.message });
         } else {
-          res.status(404).send({ message: error.message });
+          res.status(500).send({ message: 'Внутренняя ошибка сервера' });
         }
       });
   } else {
@@ -61,7 +61,7 @@ module.exports.updateProfile = (req, res) => {
         if (error.name === 'ValidationError') {
           res.status(400).send({ message: error.message });
         } else {
-          res.status(404).send({ message: error.message });
+          res.status(500).send({ message: 'Внутренняя ошибка сервера' });
         }
       });
   } else {
