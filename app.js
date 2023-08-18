@@ -19,10 +19,6 @@ app.use('/', require('./routes/index'));
 
 app.use(errors());
 
-app.use('*', (req, res) => {
-  res.status(404).send({ message: 'Ошибка 404: Роут не найден' });
-});
-
 app.use((err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   const { statusCode = 500, message } = err;
