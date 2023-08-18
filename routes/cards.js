@@ -12,8 +12,8 @@ const {
 // создаёт карточку
 router.post('/', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    link: Joi.string().pattern(/^https?:\/\/\S+$/i),
+    name: Joi.string().min(2).max(30).required(),
+    link: Joi.string().pattern(/^https?:\/\/\S+$/i).required(),
   }),
 }), createCard);
 
