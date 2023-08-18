@@ -20,7 +20,7 @@ module.exports.getCard = (req, res, next) => {
   Card.find({})
     .populate('likes')
     .then((cards) => res.send(cards))
-    .catch((error) => next(error));
+    .catch(next);
 };
 
 module.exports.deleteCard = (req, res, next) => {
@@ -34,7 +34,7 @@ module.exports.deleteCard = (req, res, next) => {
       return Card.deleteOne(card)
         .then(() => res.send({ data: 'Удаление прошло успешно' }));
     })
-    .catch((error) => next(error));
+    .catch(next);
 };
 
 module.exports.makeLike = (req, res, next) => {

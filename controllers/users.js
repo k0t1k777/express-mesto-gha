@@ -7,7 +7,7 @@ const ConflictError = require('../errors/ConflictError');
 
 module.exports.getInfoMe = (req, res, next) => {
   User.findById(req.user._id)
-    .then((user) => res.status(200).send(user))
+    .then((user) => res.send(user))
     .catch(next);
 };
 
@@ -17,12 +17,9 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'big-secret', { expiresIn: '7d' });
       res
-        .status(200)
         .send({ token });
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch(next);
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -52,7 +49,7 @@ module.exports.createUser = (req, res, next) => {
 module.exports.getAllUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((error) => next(error));
+    .catch(next);
 };
 
 module.exports.getUserId = (req, res, next) => {
