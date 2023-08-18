@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
+const ForbiddenError = require('../errors/ForbiddenError');
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
@@ -23,20 +24,17 @@ module.exports.getCard = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
-    .orFail()
+  const { cardId } = req.params;
+  Card.findById(cardId)
+    .orFail(new NotFoundError('Пользователь с таким id не найден'))
     .then((card) => {
-      res.send(card);
-    })
-    .catch((error) => {
-      if (error.name === 'CastError') {
-        next(new BadRequestError('Некорректный  id'));
-      } else if (error.name === 'DocumentNotFoundError') {
-        next(new NotFoundError('Пользователь с таким id не найден'));
-      } else {
-        next(error);
+      if (!card.owner.equals(req.user._id)) {
+        return Promise.reject(new ForbiddenError('Нельзя удалять чужие карточки'));
       }
-    });
+      return Card.deleteOne(card)
+        .then(() => res.send({ data: 'Удаление прошло успешно' }));
+    })
+    .catch((error) => next(error));
 };
 
 module.exports.makeLike = (req, res, next) => {

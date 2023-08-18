@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 // описание схемы карточки
 const cardSchema = new mongoose.Schema({
@@ -12,10 +13,14 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Поле link не может быть пустым'],
     validate: {
-      validator(http) {
-        return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/.test(http);
-      },
-      message: 'Неправильно введен Url',
+      validator: (v) => validator.isURL(
+        v,
+        {
+          protocols: ['http', 'https'],
+          require_protocol: true,
+        },
+      ),
+      message: () => 'Некоректный URL',
     },
   },
   owner: {
