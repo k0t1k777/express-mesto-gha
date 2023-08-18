@@ -67,32 +67,13 @@ module.exports.getUserId = (req, res, next) => {
     });
 };
 
-// module.exports.getUserId = (req, res, next) => {
-//   User.findById(req.params.userId)
-//     .orFail()
-//     .then((user) => {
-//       res.send(user);
-//     })
-//     .catch((error) => {
-//       if (error.name === 'CastError') {
-//         next(new BadRequestError('Некорректный  id'));
-//       } else if (error.name === 'DocumentNotFoundError') {
-//         next(new NotFoundError('Пользователь с таким id не найден'));
-//       } else {
-//         next(error);
-//       }
-//     });
-// };
-
 module.exports.updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { avatar: req.body.avatar }, { new: 'true', runValidators: true })
-    .orFail()
+    .orFail(() => new NotFoundError('Пользователь с таким id не найден'))
     .then((user) => res.send(user))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         next(new BadRequestError(error.message));
-      } else if (error.name === 'DocumentNotFoundError') {
-        next(new NotFoundError('Пользователь с таким id не найден'));
       } else {
         next(error);
       }
@@ -102,13 +83,11 @@ module.exports.updateAvatar = (req, res, next) => {
 module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: 'true', runValidators: true })
-    .orFail()
+    .orFail(() => new NotFoundError('Пользователь с таким id не найден'))
     .then((user) => res.send(user))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         next(new BadRequestError(error.message));
-      } else if (error.name === 'DocumentNotFoundError') {
-        next(new NotFoundError('Пользователь с таким id не найден'));
       } else {
         next(error);
       }
