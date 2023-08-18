@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const httpValidator = require('../utils/constans');
 
 const {
   createCard,
@@ -13,7 +14,7 @@ const {
 router.post('/', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
-    link: Joi.string().pattern(/^https?:\/\/\S+$/i).required(),
+    link: Joi.string().pattern(httpValidator),
   }),
 }), createCard);
 
