@@ -65,7 +65,7 @@ module.exports.removeLike = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: 'true' },
   )
-    .orFail()
+    .orFail(new NotFoundError('Пользователь с таким id не найден'))
     .populate(['owner', 'likes'])
     .then((card) => {
       res.send(card);
@@ -73,8 +73,6 @@ module.exports.removeLike = (req, res, next) => {
     .catch((error) => {
       if (error.name === 'CastError') {
         next(new BadRequestError('Некорректный  id'));
-      } else if (error.name === 'DocumentNotFoundError') {
-        next(new NotFoundError('Карточка с таким id не найдена'));
       } else {
         next(error);
       }
