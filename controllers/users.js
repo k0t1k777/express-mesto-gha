@@ -54,20 +54,35 @@ module.exports.getAllUsers = (req, res, next) => {
 
 module.exports.getUserId = (req, res, next) => {
   User.findById(req.params.userId)
-    .orFail()
+    .orFail(() => new NotFoundError('Пользователь с таким id не найден'))
     .then((user) => {
       res.send(user);
     })
     .catch((error) => {
       if (error.name === 'CastError') {
         next(new BadRequestError('Некорректный  id'));
-      } else if (error.name === 'DocumentNotFoundError') {
-        next(new NotFoundError('Пользователь с таким id не найден'));
       } else {
         next(error);
       }
     });
 };
+
+// module.exports.getUserId = (req, res, next) => {
+//   User.findById(req.params.userId)
+//     .orFail()
+//     .then((user) => {
+//       res.send(user);
+//     })
+//     .catch((error) => {
+//       if (error.name === 'CastError') {
+//         next(new BadRequestError('Некорректный  id'));
+//       } else if (error.name === 'DocumentNotFoundError') {
+//         next(new NotFoundError('Пользователь с таким id не найден'));
+//       } else {
+//         next(error);
+//       }
+//     });
+// };
 
 module.exports.updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { avatar: req.body.avatar }, { new: 'true', runValidators: true })
